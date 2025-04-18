@@ -26,6 +26,8 @@ import {
 import { SidebarTrigger } from "./sidebar-trigger"
 import { SidebarRail } from "./sidebar-rail"
 import { SidebarInset } from "./sidebar-inset"
+import { SidebarDesktop } from "./sidebar-desktop"
+import { SidebarMobile } from "./sidebar-mobile"
 
 export {
   Sidebar,
@@ -52,4 +54,6 @@ export {
   SidebarTrigger,
   SidebarRail,
   SidebarInset,
+  SidebarDesktop,
+  SidebarMobile,
 }
