@@ -3,119 +3,119 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Newspaper, 
-  BarChart, 
+  BarChart3, 
   Users, 
   FileText, 
   Flag,
-  Bell
+  Bell,
+  MenuIcon
 } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
 import {
   Sidebar,
-  SidebarFooter,
   SidebarContent,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuBadge
+  SidebarMenuBadge,
+  SidebarTrigger
 } from '@/components/ui/sidebar';
 import { useNotificationStore } from '@/lib/notification/notification-store';
-import { Badge } from '@/components/ui/badge';
 
 export const AppSidebar = () => {
   const { state } = useSidebar();
   const location = useLocation();
   const unreadCount = useNotificationStore(state => state.unreadCount);
   
-  const isActive = (path: string) => {
-    return location.pathname === path || location.pathname.startsWith(`${path}/`);
-  };
+  const menuItems = [
+    {
+      title: "News",
+      path: "/",
+      icon: Newspaper,
+      exact: true
+    },
+    {
+      title: "Analytics",
+      path: "/analytics",
+      icon: BarChart3
+    },
+    {
+      title: "Advertisements",
+      path: "/advertisements",
+      icon: FileText
+    },
+    {
+      title: "Users",
+      path: "/users",
+      icon: Users
+    },
+    {
+      title: "Reports",
+      path: "/reports",
+      icon: Flag
+    },
+    {
+      title: "Notifications",
+      path: "/notifications",
+      icon: Bell,
+      badge: unreadCount > 0 ? unreadCount : undefined
+    }
+  ];
 
-  const linkClass = (path: string) => {
-    return `flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
-      isActive(path) ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-100 text-gray-700'
-    }`;
+  const isActive = (path: string, exact?: boolean) => {
+    if (exact) {
+      return location.pathname === path;
+    }
+    return location.pathname.startsWith(path);
   };
-
-  const iconClass = 'w-5 h-5';
 
   return (
-    <Sidebar>
-      <SidebarHeader className="border-b py-4">
-        <div className="flex items-center px-3">
-          <div className="w-8 h-8 rounded bg-blue-600 text-white flex items-center justify-center mr-2">
-            <Newspaper className="w-4 h-4" />
+    <Sidebar 
+      collapsible="icon"
+      className="border-r border-gray-200"
+      onMouseEnter={() => {}}
+      onMouseLeave={() => {}}
+    >
+      <SidebarHeader className="h-14 flex items-center px-3 border-b border-gray-200">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white">
+            <Newspaper className="h-4 w-4" />
           </div>
-          {state === "expanded" && (
-            <div className="font-semibold text-lg">News Admin</div>
-          )}
+          <span className="font-semibold text-gray-900">News Admin</span>
+        </div>
+        <div className="ml-auto">
+          <SidebarTrigger>
+            <MenuIcon className="h-4 w-4" />
+          </SidebarTrigger>
         </div>
       </SidebarHeader>
-      <SidebarContent>
+
+      <SidebarContent className="px-2 py-2">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="News">
-              <Link to="/" className={isActive('/') ? 'data-[active=true]' : ''}>
-                <Newspaper className={iconClass} />
-                <span>News</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Analytics">
-              <Link to="/analytics" className={isActive('/analytics') ? 'data-[active=true]' : ''}>
-                <BarChart className={iconClass} />
-                <span>Analytics</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Advertisements">
-              <Link to="/advertisements" className={isActive('/advertisements') ? 'data-[active=true]' : ''}>
-                <FileText className={iconClass} />
-                <span>Advertisements</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Users">
-              <Link to="/users" className={isActive('/users') ? 'data-[active=true]' : ''}>
-                <Users className={iconClass} />
-                <span>Users</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Reports">
-              <Link to="/reports" className={isActive('/reports') ? 'data-[active=true]' : ''}>
-                <Flag className={iconClass} />
-                <span>Reports</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Notifications">
-              <Link to="/notifications" className={isActive('/notifications') ? 'data-[active=true]' : ''}>
-                <Bell className={iconClass} />
-                <span>Notifications</span>
-              </Link>
-            </SidebarMenuButton>
-            {unreadCount > 0 && (
-              <SidebarMenuBadge>
-                <Badge variant="destructive" className="h-5 min-w-5 flex items-center justify-center p-0 text-xs">
-                  {unreadCount}
-                </Badge>
-              </SidebarMenuBadge>
-            )}
-          </SidebarMenuItem>
+          {menuItems.map((item) => (
+            <SidebarMenuItem key={item.path}>
+              <SidebarMenuButton
+                asChild
+                tooltip={item.title}
+                isActive={isActive(item.path, item.exact)}
+              >
+                <Link to={item.path}>
+                  <item.icon className="h-4 w-4" />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+              {item.badge && (
+                <SidebarMenuBadge>
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-md bg-red-500 px-1.5 text-xs font-medium text-white">
+                    {item.badge}
+                  </span>
+                </SidebarMenuBadge>
+              )}
+            </SidebarMenuItem>
+          ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="border-t p-3">
-        <div className="flex items-center justify-center">
-          <div className="text-xs text-gray-500">v1.0.0</div>
-        </div>
-      </SidebarFooter>
     </Sidebar>
   );
 };
