@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, NewspaperIcon, StickyNote } from "lucide-react";
+import { LayoutDashboard, NewspaperIcon, StickyNote, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Sidebar,
@@ -27,6 +27,11 @@ const menuItems = [
     title: "Advertisements",
     url: "/advertisements",
     icon: StickyNote,
+  },
+  {
+    title: "Users",
+    url: "/users",
+    icon: Users,
   },
 ];
 

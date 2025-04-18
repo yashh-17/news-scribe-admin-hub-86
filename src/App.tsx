@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import NewsView from "./pages/NewsView";
 import AdvertisementPage from "./pages/AdvertisementPage";
+import UserPage from "./pages/UserPage";
 import { AppLayout } from "./components/layout/AppLayout";
 
 // Create a new QueryClient instance outside the component
@@ -53,6 +54,16 @@ const App = () => (
                 <ProtectedRoute>
                   <AppLayout>
                     <AdvertisementPage />
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <UserPage />
                   </AppLayout>
                 </ProtectedRoute>
               }
