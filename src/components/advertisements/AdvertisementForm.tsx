@@ -94,7 +94,15 @@ export const AdvertisementForm = ({ editingAd, onClose }: AdvertisementFormProps
           description: "The advertisement has been updated successfully.",
         });
       } else {
-        addAdvertisement(values);
+        // Ensure all required fields are present when creating a new advertisement
+        const newAd: Omit<Advertisement, "id" | "createdAt" | "updatedAt"> = {
+          title: values.title,
+          image: values.image,
+          redirectUrl: values.redirectUrl || undefined,
+          postIds: values.postIds,
+          isActive: values.isActive
+        };
+        addAdvertisement(newAd);
         toast({
           title: "Advertisement Created",
           description: "The advertisement has been created successfully.",
