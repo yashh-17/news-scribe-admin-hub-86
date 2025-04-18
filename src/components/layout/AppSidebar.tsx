@@ -19,7 +19,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useSidebar } from "@/components/ui/sidebar/sidebar-context";
-import { useEffect } from "react";
 
 const menuItems = [
   {
@@ -46,7 +45,7 @@ const menuItems = [
 
 export function AppSidebar() {
   const location = useLocation();
-  const { setOpen } = useSidebar();
+  const { open, setOpen } = useSidebar();
 
   // Function to handle mouse enter/leave events
   const handleMouseEnter = () => setOpen(true);
@@ -54,20 +53,24 @@ export function AppSidebar() {
 
   return (
     <Sidebar 
-      className="border-r border-gray-200" 
-      collapsible="icon" 
+      className="border-r border-gray-200 transition-all duration-300 ease-in-out" 
+      collapsible="icon"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <SidebarContent>
         <div className="flex items-center justify-between px-4 py-4">
-          <h2 className="text-xl font-semibold text-gray-800">Admin Panel</h2>
+          <h2 className={`text-xl font-semibold text-gray-800 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}>
+            Admin Panel
+          </h2>
           <SidebarTrigger>
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className={`h-5 w-5 transition-transform duration-300 ${!open ? 'rotate-180' : ''}`} />
           </SidebarTrigger>
         </div>
         <SidebarGroup>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className={`transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}>
+            Menu
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -79,10 +82,12 @@ export function AppSidebar() {
                   >
                     <Link 
                       to={item.url} 
-                      className="w-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                      className="w-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
                     >
                       <item.icon className="shrink-0" />
-                      <span>{item.title}</span>
+                      <span className={`transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}>
+                        {item.title}
+                      </span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
