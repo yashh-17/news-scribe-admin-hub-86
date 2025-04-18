@@ -120,9 +120,16 @@ export const NewsCreateEditModal = ({
 
   const onSubmit = (values: FormValues) => {
     if (editingNews) {
+      // Fix: Ensure all required properties are included when updating news
       updateNews({
         id: editingNews.id,
-        ...values,
+        title: values.title,
+        content: values.content,
+        category: values.category,
+        image: values.image,
+        audio: values.audio,
+        video: values.video,
+        keywords: values.keywords,
         createdAt: editingNews.createdAt,
         updatedAt: new Date().toISOString(),
       });
@@ -131,9 +138,16 @@ export const NewsCreateEditModal = ({
         description: "The news item has been successfully updated.",
       });
     } else {
+      // Fix: Ensure all required properties are included when adding news
       addNews({
-        ...values,
         id: `NEWS-${Date.now().toString(36).toUpperCase()}`,
+        title: values.title,
+        content: values.content,
+        category: values.category,
+        image: values.image,
+        audio: values.audio,
+        video: values.video,
+        keywords: values.keywords,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
