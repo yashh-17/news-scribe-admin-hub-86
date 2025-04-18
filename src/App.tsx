@@ -11,11 +11,11 @@ import { LoginPage } from '@/pages/LoginPage';
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import NewsView from "./pages/NewsView";
+import NewsAnalyticsPage from "./pages/NewsAnalyticsPage";
 import AdvertisementPage from "./pages/AdvertisementPage";
 import UserPage from "./pages/UserPage";
 import { AppLayout } from "./components/layout/AppLayout";
 
-// Create a new QueryClient instance outside the component
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -43,6 +43,16 @@ const App = () => (
                 <ProtectedRoute>
                   <AppLayout>
                     <NewsView />
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <NewsAnalyticsPage />
                   </AppLayout>
                 </ProtectedRoute>
               }

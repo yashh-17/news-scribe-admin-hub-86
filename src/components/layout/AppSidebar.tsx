@@ -4,7 +4,8 @@ import {
   NewspaperIcon, 
   StickyNote, 
   Users,
-  ChevronLeft
+  ChevronLeft,
+  BarChart
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -30,6 +31,11 @@ const menuItems = [
     title: "News",
     url: "/",
     icon: NewspaperIcon,
+  },
+  {
+    title: "Analytics",
+    url: "/analytics",
+    icon: BarChart,
   },
   {
     title: "Advertisements",
