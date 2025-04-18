@@ -18,6 +18,8 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar/sidebar-context";
+import { useEffect } from "react";
 
 const menuItems = [
   {
@@ -44,9 +46,19 @@ const menuItems = [
 
 export function AppSidebar() {
   const location = useLocation();
+  const { setOpen } = useSidebar();
+
+  // Function to handle mouse enter/leave events
+  const handleMouseEnter = () => setOpen(true);
+  const handleMouseLeave = () => setOpen(false);
 
   return (
-    <Sidebar className="border-r border-gray-200">
+    <Sidebar 
+      className="border-r border-gray-200" 
+      collapsible="icon" 
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <SidebarContent>
         <div className="flex items-center justify-between px-4 py-4">
           <h2 className="text-xl font-semibold text-gray-800">Admin Panel</h2>
