@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -12,6 +11,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import NewsView from "./pages/NewsView";
 import AdvertisementPage from "./pages/AdvertisementPage";
+import { AppLayout } from "./components/layout/AppLayout";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +29,9 @@ const App = () => (
                 path="/"
                 element={
                   <ProtectedRoute>
-                    <Index />
+                    <AppLayout>
+                      <Index />
+                    </AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -37,7 +39,9 @@ const App = () => (
                 path="/news/:id"
                 element={
                   <ProtectedRoute>
-                    <NewsView />
+                    <AppLayout>
+                      <NewsView />
+                    </AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -45,7 +49,9 @@ const App = () => (
                 path="/advertisements"
                 element={
                   <ProtectedRoute>
-                    <AdvertisementPage />
+                    <AppLayout>
+                      <AdvertisementPage />
+                    </AppLayout>
                   </ProtectedRoute>
                 }
               />

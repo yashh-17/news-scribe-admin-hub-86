@@ -3,7 +3,7 @@ import { AdvertisementDashboard } from "@/components/advertisements/Advertisemen
 
 const AdvertisementPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="flex-1">
       <AdvertisementDashboard />
     </div>
   );
