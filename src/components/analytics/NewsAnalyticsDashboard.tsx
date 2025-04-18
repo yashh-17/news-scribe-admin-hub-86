@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -64,8 +63,8 @@ export function NewsAnalyticsDashboard() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
+    <div className="w-full">
+      <div className="flex items-center gap-4 mb-6">
         <div className="flex-1">
           <Input
             placeholder="Search articles..."
@@ -79,65 +78,67 @@ export function NewsAnalyticsDashboard() {
         </Button>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead 
-                className="cursor-pointer"
-                onClick={() => handleSort('title')}
-              >
-                <div className="flex items-center">
-                  Title
-                  <SortIcon field="title" />
-                </div>
-              </TableHead>
-              <TableHead 
-                className="cursor-pointer"
-                onClick={() => handleSort('likes')}
-              >
-                <div className="flex items-center">
-                  Likes
-                  <SortIcon field="likes" />
-                </div>
-              </TableHead>
-              <TableHead 
-                className="cursor-pointer"
-                onClick={() => handleSort('comments')}
-              >
-                <div className="flex items-center">
-                  Comments
-                  <SortIcon field="comments" />
-                </div>
-              </TableHead>
-              <TableHead 
-                className="cursor-pointer"
-                onClick={() => handleSort('createdAt')}
-              >
-                <div className="flex items-center">
-                  Published
-                  <SortIcon field="createdAt" />
-                </div>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedNews.map((news) => (
-              <TableRow
-                key={news.id}
-                className="cursor-pointer hover:bg-muted/50"
-                onClick={() => navigate(`/news/${news.id}`)}
-              >
-                <TableCell>{news.title}</TableCell>
-                <TableCell>{Math.floor(Math.random() * 100)}</TableCell>
-                <TableCell>{Math.floor(Math.random() * 50)}</TableCell>
-                <TableCell>
-                  {format(new Date(news.createdAt), 'MMM d, yyyy')}
-                </TableCell>
+      <div className="rounded-md border bg-white">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead 
+                  className="cursor-pointer"
+                  onClick={() => handleSort('title')}
+                >
+                  <div className="flex items-center">
+                    Title
+                    <SortIcon field="title" />
+                  </div>
+                </TableHead>
+                <TableHead 
+                  className="cursor-pointer"
+                  onClick={() => handleSort('likes')}
+                >
+                  <div className="flex items-center">
+                    Likes
+                    <SortIcon field="likes" />
+                  </div>
+                </TableHead>
+                <TableHead 
+                  className="cursor-pointer"
+                  onClick={() => handleSort('comments')}
+                >
+                  <div className="flex items-center">
+                    Comments
+                    <SortIcon field="comments" />
+                  </div>
+                </TableHead>
+                <TableHead 
+                  className="cursor-pointer"
+                  onClick={() => handleSort('createdAt')}
+                >
+                  <div className="flex items-center">
+                    Published
+                    <SortIcon field="createdAt" />
+                  </div>
+                </TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {sortedNews.map((news) => (
+                <TableRow
+                  key={news.id}
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => navigate(`/news/${news.id}`)}
+                >
+                  <TableCell>{news.title}</TableCell>
+                  <TableCell>{Math.floor(Math.random() * 100)}</TableCell>
+                  <TableCell>{Math.floor(Math.random() * 50)}</TableCell>
+                  <TableCell>
+                    {format(new Date(news.createdAt), 'MMM d, yyyy')}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

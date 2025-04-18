@@ -1,4 +1,3 @@
-
 import {
   Table,
   TableBody,
@@ -14,6 +13,8 @@ import { useAdvertisementStore } from "@/lib/advertisement/advertisement-store";
 import { Edit, Trash2, Link, ExternalLink } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useNewsStore } from "@/lib/news/news-store";
+import { Pagination } from "@/components/news/Pagination";
+import { useState } from "react";
 
 interface AdvertisementTableProps {
   onEdit: (ad: Advertisement) => void;
@@ -23,36 +24,49 @@ interface AdvertisementTableProps {
 export const AdvertisementTable = ({ onEdit, onDelete }: AdvertisementTableProps) => {
   const { advertisements, toggleAdvertisementStatus } = useAdvertisementStore();
   const { newsItems } = useNewsStore();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const getPostTitle = (postId: string) => {
     const post = newsItems.find(item => item.id === postId);
     return post ? post.title : 'Unknown Post';
   };
 
+  // Calculate the start and end index for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  // Slice the advertisements array to get only the items for the current page
+  const paginatedAdvertisements = advertisements.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(advertisements.length / itemsPerPage);
+
   return (
-    <div className="overflow-x-auto">
-      {advertisements.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">No advertisements found</p>
-          <p className="text-sm text-muted-foreground mt-2">
-            Create a new advertisement to get started
-          </p>
-        </div>
-      ) : (
-        <Table>
-          <TableHeader>
+    <div className="w-full overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Status</TableHead>
+            <TableHead>Image</TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Associated Posts</TableHead>
+            <TableHead>Redirect URL</TableHead>
+            <TableHead>Last Updated</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {paginatedAdvertisements.length === 0 ? (
             <TableRow>
-              <TableHead className="w-[100px]">Status</TableHead>
-              <TableHead>Image</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Associated Posts</TableHead>
-              <TableHead>Redirect URL</TableHead>
-              <TableHead>Last Updated</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableCell colSpan={7} className="text-center py-12">
+                <p className="text-muted-foreground">No advertisements found</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Create a new advertisement to get started
+                </p>
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {advertisements.map((ad) => (
+          ) : (
+            paginatedAdvertisements.map((ad) => (
               <TableRow key={ad.id}>
                 <TableCell>
                   <div className="flex items-center space-x-2">
@@ -147,9 +161,19 @@ export const AdvertisementTable = ({ onEdit, onDelete }: AdvertisementTableProps
                   </div>
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            ))
+          )}
+        </TableBody>
+      </Table>
+      
+      {totalPages > 1 && (
+        <div className="py-4 px-6 border-t">
+          <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       )}
     </div>
   );

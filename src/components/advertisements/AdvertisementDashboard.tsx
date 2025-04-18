@@ -45,10 +45,10 @@ export const AdvertisementDashboard = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full space-y-6">
       <AdvertisementHeader onCreateAd={handleCreateAd} />
       
-      <Card className="mt-6">
+      <Card className="overflow-hidden">
         <AdvertisementTable 
           onEdit={handleEditAd}
           onDelete={handleDeleteAd}
