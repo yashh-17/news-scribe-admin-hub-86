@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
@@ -8,12 +7,29 @@ import { useNewsStore } from "@/lib/news/news-store";
 import { format } from "date-fns";
 import { useAdvertisementStore } from "@/lib/advertisement/advertisement-store";
 import { NewsAdvertisementDisplay } from "@/components/advertisements/NewsAdvertisementDisplay";
+import { NewsInsights } from "@/components/news/NewsInsights";
+
+const mockComments = [
+  {
+    id: "1",
+    userName: "John Doe",
+    content: "Great article! Very informative.",
+    timestamp: new Date().toISOString(),
+  },
+  {
+    id: "2",
+    userName: "Jane Smith",
+    content: "This helped me understand the topic better.",
+    timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+  },
+];
 
 const NewsView = () => {
   const { id } = useParams<{ id: string }>();
   const { newsItems } = useNewsStore();
   const [newsItem, setNewsItem] = useState<NewsItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const [likes, setLikes] = useState(42);
 
   useEffect(() => {
     if (id) {
@@ -61,7 +77,6 @@ const NewsView = () => {
         Back to News Dashboard
       </Link>
       
-      {/* Display relevant advertisements for this news article */}
       <div className="mb-6">
         <NewsAdvertisementDisplay newsId={newsItem.id} />
       </div>
@@ -134,6 +149,12 @@ const NewsView = () => {
           </div>
         </div>
       </article>
+
+      <NewsInsights 
+        newsId={newsItem?.id || ''} 
+        likes={likes} 
+        comments={mockComments} 
+      />
     </div>
   );
 };
