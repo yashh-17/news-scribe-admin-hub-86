@@ -5,7 +5,8 @@ import {
   StickyNote, 
   Users,
   ChevronLeft,
-  BarChart
+  BarChart,
+  AlertTriangle
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -46,6 +47,11 @@ const menuItems = [
     title: "Users",
     url: "/users",
     icon: Users,
+  },
+  {
+    title: "Reports",
+    url: "/reports",
+    icon: AlertTriangle,
   },
 ];
 
