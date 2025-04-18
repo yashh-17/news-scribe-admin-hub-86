@@ -13,10 +13,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     <SidebarProvider>
       <div className="flex h-screen overflow-hidden">
         <AppSidebar />
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 flex flex-col overflow-hidden">
           <AppHeader />
-          <main className="bg-gray-50 min-h-[calc(100vh-53px)]">
-            {children}
+          <main className="flex-1 overflow-auto bg-gray-50">
+            <div className="container mx-auto p-4 h-full">
+              {children}
+            </div>
           </main>
         </div>
       </div>

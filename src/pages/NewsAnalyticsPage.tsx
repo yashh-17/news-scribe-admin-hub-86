@@ -5,8 +5,8 @@ import { Card } from "@/components/ui/card";
 
 export default function NewsAnalyticsPage() {
   return (
-    <div className="space-y-6">
-      <div>
+    <div className="h-full">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold tracking-tight">News Analytics</h1>
         <p className="text-muted-foreground">Monitor engagement and performance across all news articles</p>
       </div>

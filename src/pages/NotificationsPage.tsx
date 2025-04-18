@@ -34,7 +34,7 @@ const NotificationsPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="h-full">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold">Notifications</h1>
@@ -63,7 +63,7 @@ const NotificationsPage: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 pb-4">
           {notifications.map((notification) => (
             <Card 
               key={notification.id} 
