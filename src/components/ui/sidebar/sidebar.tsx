@@ -1,6 +1,5 @@
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
 import { useSidebar } from "./sidebar-context"
 import { SidebarDesktop } from "./sidebar-desktop"
 import { SidebarMobile } from "./sidebar-mobile"
@@ -33,10 +32,7 @@ export const Sidebar = React.forwardRef<
     if (collapsible === "none") {
       return (
         <div
-          className={cn(
-            "flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground",
-            className
-          )}
+          className="flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground"
           ref={ref}
           {...props}
         >
@@ -76,3 +72,4 @@ export const Sidebar = React.forwardRef<
   }
 )
 Sidebar.displayName = "Sidebar"
+
