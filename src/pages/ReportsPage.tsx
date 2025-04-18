@@ -4,9 +4,11 @@ import { ReportsDashboard } from '@/components/reports/ReportsDashboard';
 
 const ReportsPage: React.FC = () => {
   return (
-    <div className="h-full">
+    <div className="h-full flex flex-col">
       <h1 className="text-2xl font-bold mb-6">Reports Management</h1>
-      <ReportsDashboard />
+      <div className="flex-1">
+        <ReportsDashboard />
+      </div>
     </div>
   );
 };

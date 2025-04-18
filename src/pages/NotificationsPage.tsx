@@ -34,7 +34,7 @@ const NotificationsPage: React.FC = () => {
   };
 
   return (
-    <div className="h-full">
+    <div className="h-full flex flex-col">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold">Notifications</h1>
@@ -53,7 +53,7 @@ const NotificationsPage: React.FC = () => {
       </div>
 
       {notifications.length === 0 ? (
-        <Card className="border-dashed">
+        <Card className="border-dashed flex-1">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Bell className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium">No Notifications</h3>
@@ -63,7 +63,7 @@ const NotificationsPage: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-4 pb-4">
+        <div className="space-y-4 overflow-y-auto flex-1 pb-4">
           {notifications.map((notification) => (
             <Card 
               key={notification.id} 

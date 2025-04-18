@@ -16,7 +16,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         <div className="flex-1 flex flex-col overflow-hidden">
           <AppHeader />
           <main className="flex-1 overflow-auto bg-gray-50">
-            <div className="container mx-auto p-4 h-full">
+            <div className="container mx-auto py-4 px-6 h-full max-w-full">
               {children}
             </div>
           </main>
