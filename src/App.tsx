@@ -14,6 +14,7 @@ import NewsView from "./pages/NewsView";
 import NewsAnalyticsPage from "./pages/NewsAnalyticsPage";
 import AdvertisementPage from "./pages/AdvertisementPage";
 import UserPage from "./pages/UserPage";
+import ReportsPage from "./pages/ReportsPage";
 import { AppLayout } from "./components/layout/AppLayout";
 
 const queryClient = new QueryClient();

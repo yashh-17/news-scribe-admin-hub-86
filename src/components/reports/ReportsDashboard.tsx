@@ -25,9 +25,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { NewsReport } from "@/types";
 
 // Mock data for reports
-const mockReports: Report[] = [
+const mockReports: NewsReport[] = [
   {
     id: "REP-001",
     articleId: "NEWS-1",
@@ -47,7 +48,7 @@ const mockReports: Report[] = [
 ];
 
 export function ReportsDashboard() {
-  const [reports, setReports] = useState<Report[]>(mockReports);
+  const [reports, setReports] = useState<NewsReport[]>(mockReports);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
