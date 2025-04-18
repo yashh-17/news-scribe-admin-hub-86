@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -121,7 +120,7 @@ export const NewsCreateEditModal = ({
   const onSubmit = (values: FormValues) => {
     if (editingNews) {
       // Fix: Ensure all required properties are included when updating news
-      updateNews({
+      const updatedNews: NewsItem = {
         id: editingNews.id,
         title: values.title,
         content: values.content,
@@ -132,14 +131,16 @@ export const NewsCreateEditModal = ({
         keywords: values.keywords,
         createdAt: editingNews.createdAt,
         updatedAt: new Date().toISOString(),
-      });
+      };
+      
+      updateNews(updatedNews);
       toast({
         title: "News Updated",
         description: "The news item has been successfully updated.",
       });
     } else {
       // Fix: Ensure all required properties are included when adding news
-      addNews({
+      const newNewsItem: NewsItem = {
         id: `NEWS-${Date.now().toString(36).toUpperCase()}`,
         title: values.title,
         content: values.content,
@@ -150,7 +151,9 @@ export const NewsCreateEditModal = ({
         keywords: values.keywords,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      });
+      };
+      
+      addNews(newNewsItem);
       toast({
         title: "News Created",
         description: "The news item has been successfully created.",

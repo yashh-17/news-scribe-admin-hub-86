@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { 
   Table, 
   TableBody, 
@@ -9,7 +10,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Image, Video, File, FileAudio } from "lucide-react";
+import { Edit, Trash2, Image, Video, File, FileAudio, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useNewsStore } from "@/lib/news/news-store";
 import { Pagination } from "./Pagination";
@@ -96,6 +97,16 @@ export const NewsTable = ({
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
+                    <Link to={`/news/${news.id}`}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-blue-500 hover:text-blue-700 hover:bg-blue-50"
+                      >
+                        <Eye className="h-4 w-4" />
+                        <span className="sr-only">View</span>
+                      </Button>
+                    </Link>
                     <Button
                       variant="ghost"
                       size="icon"
