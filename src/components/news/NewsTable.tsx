@@ -13,9 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, Trash2, Image, Video, File, FileAudio, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { 
-  useNewsStore, 
-  selectPaginatedNewsItems, 
-  selectTotalPages 
+  useNewsStore
 } from "@/lib/news/news-store";
 import { Pagination } from "./Pagination";
 
@@ -28,14 +26,37 @@ export const NewsTable = ({
   onEdit, 
   onDelete
 }: NewsTableProps) => {
-  const { newsItems, currentPage, setCurrentPage } = useNewsStore(state => ({
-    newsItems: state.newsItems,
-    currentPage: state.currentPage,
-    setCurrentPage: state.setCurrentPage
-  }));
+  // Use a more stable approach to access the store state
+  const newsItems = useNewsStore(state => state.newsItems);
+  const currentPage = useNewsStore(state => state.currentPage);
+  const setCurrentPage = useNewsStore(state => state.setCurrentPage);
+  const searchTerm = useNewsStore(state => state.searchTerm);
+  const selectedCategory = useNewsStore(state => state.selectedCategory);
+  const itemsPerPage = useNewsStore(state => state.itemsPerPage);
   
-  const paginatedNewsItems = useNewsStore(selectPaginatedNewsItems);
-  const totalPages = useNewsStore(selectTotalPages);
+  // Calculate filtered items inside the component instead of using selectors
+  const filteredItems = newsItems.filter((news) => {
+    // Filter by search term
+    const matchesSearch = searchTerm === "" || 
+      news.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      news.keywords.some(keyword => 
+        keyword.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    
+    // Filter by category
+    const matchesCategory = selectedCategory === "all" || 
+      news.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
+  
+  // Calculate paginated items
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedNewsItems = filteredItems.slice(startIndex, endIndex);
+  
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   
   const getMediaIcon = (news: NewsItem) => {
     const icons = [];

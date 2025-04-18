@@ -15,7 +15,11 @@ export const NewsDashboard = () => {
   const [deletingNewsId, setDeletingNewsId] = useState<string | null>(null);
   const { toast } = useToast();
   
-  const { searchTerm, setSearchTerm, selectedCategory, setSelectedCategory } = useNewsStore();
+  // Access store values directly, avoiding selectors that might cause re-renders
+  const searchTerm = useNewsStore(state => state.searchTerm);
+  const setSearchTerm = useNewsStore(state => state.setSearchTerm);
+  const selectedCategory = useNewsStore(state => state.selectedCategory);
+  const setSelectedCategory = useNewsStore(state => state.setSelectedCategory);
 
   const handleCreateNews = () => {
     setEditingNews(null);
@@ -34,7 +38,10 @@ export const NewsDashboard = () => {
 
   const confirmDelete = () => {
     if (deletingNewsId) {
-      useNewsStore.getState().deleteNews(deletingNewsId);
+      // Use direct method call instead of getState which can cause loops
+      const deleteNews = useNewsStore.getState().deleteNews;
+      deleteNews(deletingNewsId);
+      
       toast({
         title: "News Deleted",
         description: "The news item has been successfully deleted.",
