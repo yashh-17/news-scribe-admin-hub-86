@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -74,8 +73,6 @@ export const AppSidebar = () => {
     <Sidebar 
       collapsible="icon"
       className="border-r border-gray-200 transition-all duration-300"
-      onMouseEnter={() => {}}
-      onMouseLeave={() => {}}
     >
       <SidebarHeader className="h-14 flex items-center px-3 border-b border-gray-100/10">
         <div className="flex items-center gap-2">

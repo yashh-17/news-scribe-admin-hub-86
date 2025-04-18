@@ -23,16 +23,28 @@ export const SidebarDesktop = React.forwardRef<
   onMouseLeave,
   ...props 
 }, ref) => {
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsHovered(true);
+    onMouseEnter?.(e);
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsHovered(false);
+    onMouseLeave?.(e);
+  };
+
   return (
     <div
       ref={ref}
       className="group peer hidden md:block text-sidebar-foreground"
-      data-state={state}
-      data-collapsible={state === "collapsed" ? collapsible : ""}
+      data-state={isHovered ? "expanded" : state}
+      data-collapsible={!isHovered && state === "collapsed" ? collapsible : ""}
       data-variant={variant}
       data-side={side}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div
         className={cn(
