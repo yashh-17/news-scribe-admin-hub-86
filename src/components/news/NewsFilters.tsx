@@ -47,7 +47,7 @@ export const NewsFilters = ({
             <SelectValue placeholder="Filter by category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Categories</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
             {NEWS_CATEGORIES.map((category) => (
               <SelectItem key={category} value={category}>
                 {category}
