@@ -11,6 +11,7 @@ import { LoginPage } from '@/pages/LoginPage';
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import NewsView from "./pages/NewsView";
+import AdvertisementPage from "./pages/AdvertisementPage";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <NewsView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/advertisements"
+                element={
+                  <ProtectedRoute>
+                    <AdvertisementPage />
                   </ProtectedRoute>
                 }
               />
