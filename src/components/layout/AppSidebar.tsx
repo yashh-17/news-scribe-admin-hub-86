@@ -47,7 +47,7 @@ export function AppSidebar() {
   const location = useLocation();
   // Get the context values safely with try/catch
   let open = false;
-  let setOpen = () => {};
+  let setOpen = (value: boolean) => {}; // Fixed: Properly define the function signature with a boolean parameter
   
   try {
     const sidebarContext = useSidebar();
