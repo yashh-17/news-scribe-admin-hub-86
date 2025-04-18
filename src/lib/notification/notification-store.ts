@@ -3,9 +3,9 @@ import { create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
 
 export interface NotificationStore {
-  notifications: Notification[];
+  notifications: AppNotification[];
   unreadCount: number;
-  addNotification: (notification: Omit<Notification, "id" | "createdAt" | "read">) => void;
+  addNotification: (notification: Omit<AppNotification, "id" | "createdAt" | "read">) => void;
   markAsRead: (id: string) => void;
   markAllAsRead: () => void;
   removeNotification: (id: string) => void;

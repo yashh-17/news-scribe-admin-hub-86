@@ -13,19 +13,18 @@ import { useSidebar } from '@/components/ui/sidebar';
 import {
   Sidebar,
   SidebarFooter,
-  SidebarSection,
-  SidebarHeader,
-  SidebarItem,
-  SidebarItemIcon,
-  SidebarItemText,
-  SidebarTrigger,
   SidebarContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarMenuBadge
 } from '@/components/ui/sidebar';
 import { useNotificationStore } from '@/lib/notification/notification-store';
 import { Badge } from '@/components/ui/badge';
 
 export const AppSidebar = () => {
-  const { isOpen } = useSidebar();
+  const { state } = useSidebar();
   const location = useLocation();
   const unreadCount = useNotificationStore(state => state.unreadCount);
   
@@ -48,84 +47,75 @@ export const AppSidebar = () => {
           <div className="w-8 h-8 rounded bg-blue-600 text-white flex items-center justify-center mr-2">
             <Newspaper className="w-4 h-4" />
           </div>
-          {isOpen && (
+          {state === "expanded" && (
             <div className="font-semibold text-lg">News Admin</div>
           )}
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarSection>
-          <SidebarItem>
-            <Link to="/" className={linkClass('/')}>
-              <SidebarItemIcon>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="News">
+              <Link to="/" className={isActive('/') ? 'data-[active=true]' : ''}>
                 <Newspaper className={iconClass} />
-              </SidebarItemIcon>
-              <SidebarItemText>News</SidebarItemText>
-            </Link>
-          </SidebarItem>
-          <SidebarItem>
-            <Link to="/analytics" className={linkClass('/analytics')}>
-              <SidebarItemIcon>
+                <span>News</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Analytics">
+              <Link to="/analytics" className={isActive('/analytics') ? 'data-[active=true]' : ''}>
                 <BarChart className={iconClass} />
-              </SidebarItemIcon>
-              <SidebarItemText>Analytics</SidebarItemText>
-            </Link>
-          </SidebarItem>
-          <SidebarItem>
-            <Link to="/advertisements" className={linkClass('/advertisements')}>
-              <SidebarItemIcon>
+                <span>Analytics</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Advertisements">
+              <Link to="/advertisements" className={isActive('/advertisements') ? 'data-[active=true]' : ''}>
                 <FileText className={iconClass} />
-              </SidebarItemIcon>
-              <SidebarItemText>Advertisements</SidebarItemText>
-            </Link>
-          </SidebarItem>
-          <SidebarItem>
-            <Link to="/users" className={linkClass('/users')}>
-              <SidebarItemIcon>
+                <span>Advertisements</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Users">
+              <Link to="/users" className={isActive('/users') ? 'data-[active=true]' : ''}>
                 <Users className={iconClass} />
-              </SidebarItemIcon>
-              <SidebarItemText>Users</SidebarItemText>
-            </Link>
-          </SidebarItem>
-          <SidebarItem>
-            <Link to="/reports" className={linkClass('/reports')}>
-              <SidebarItemIcon>
+                <span>Users</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Reports">
+              <Link to="/reports" className={isActive('/reports') ? 'data-[active=true]' : ''}>
                 <Flag className={iconClass} />
-              </SidebarItemIcon>
-              <SidebarItemText>Reports</SidebarItemText>
-            </Link>
-          </SidebarItem>
-          <SidebarItem>
-            <Link to="/notifications" className={linkClass('/notifications')}>
-              <SidebarItemIcon>
+                <span>Reports</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Notifications">
+              <Link to="/notifications" className={isActive('/notifications') ? 'data-[active=true]' : ''}>
                 <Bell className={iconClass} />
-              </SidebarItemIcon>
-              <SidebarItemText>
-                <div className="flex items-center gap-2">
-                  Notifications
-                  {unreadCount > 0 && (
-                    <Badge variant="destructive" className="h-5 min-w-5 flex items-center justify-center p-0 text-xs">
-                      {unreadCount}
-                    </Badge>
-                  )}
-                </div>
-              </SidebarItemText>
-            </Link>
-          </SidebarItem>
-        </SidebarSection>
+                <span>Notifications</span>
+              </Link>
+            </SidebarMenuButton>
+            {unreadCount > 0 && (
+              <SidebarMenuBadge>
+                <Badge variant="destructive" className="h-5 min-w-5 flex items-center justify-center p-0 text-xs">
+                  {unreadCount}
+                </Badge>
+              </SidebarMenuBadge>
+            )}
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="border-t p-3">
-        <SidebarTrigger />
+        <div className="flex items-center justify-center">
+          <div className="text-xs text-gray-500">v1.0.0</div>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
 };
-
-console.log('Sidebar context not available:', {
-  _type: 'Error',
-  value: {
-    name: 'Error',
-    message: 'useSidebar must be used within a SidebarProvider',
-    stack: 'Error: useSidebar must be used within a SidebarProvider\n    at useSidebar (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/src/components/ui/sidebar/sidebar-context.tsx:21:15)\n    at AppSidebar (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/src/components/layout/AppSidebar.tsx:54:64)\n    at renderWithHooks (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:11548:26)\n    at mountIndeterminateComponent (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:14926:21)\n    at beginWork (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:15914:22)\n    at beginWork$1 (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:19753:22)\n    at performUnitOfWork (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:19198:20)\n    at workLoopSync (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:19137:13)\n    at renderRootSync (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:19116:15)\n    at performSyncWorkOnRoot (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:18874:28)'
-  }
-});

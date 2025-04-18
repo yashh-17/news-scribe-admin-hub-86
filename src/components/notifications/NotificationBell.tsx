@@ -26,14 +26,14 @@ export const NotificationBell = () => {
     markAllAsRead 
   } = useNotificationStore();
 
-  const handleNotificationClick = (notification: Notification) => {
+  const handleNotificationClick = (notification: AppNotification) => {
     markAsRead(notification.id);
     if (notification.linkTo) {
       navigate(notification.linkTo);
     }
   };
 
-  const getNotificationIcon = (type: Notification['type']) => {
+  const getNotificationIcon = (type: AppNotification['type']) => {
     switch (type) {
       case 'warning':
         return "⚠️";

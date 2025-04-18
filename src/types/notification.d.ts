@@ -1,5 +1,5 @@
 
-interface Notification {
+interface AppNotification {
   id: string;
   title: string;
   message: string;

@@ -12,7 +12,7 @@ const NotificationsPage: React.FC = () => {
   const navigate = useNavigate();
   const { notifications, markAsRead, removeNotification, clearAllNotifications } = useNotificationStore();
 
-  const getNotificationIcon = (notification: Notification) => {
+  const getNotificationIcon = (notification: AppNotification) => {
     switch (notification.type) {
       case 'warning':
         return <AlertCircle className="h-6 w-6 text-amber-500" />;
@@ -26,7 +26,7 @@ const NotificationsPage: React.FC = () => {
     }
   };
 
-  const handleNotificationClick = (notification: Notification) => {
+  const handleNotificationClick = (notification: AppNotification) => {
     markAsRead(notification.id);
     if (notification.linkTo) {
       navigate(notification.linkTo);
