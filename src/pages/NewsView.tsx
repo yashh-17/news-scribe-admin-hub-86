@@ -1,13 +1,17 @@
+
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
+import { ArrowLeft, Calendar, User, Tag, AlertTriangle } from "lucide-react";
 import { useNewsStore } from "@/lib/news/news-store";
 import { format } from "date-fns";
 import { useAdvertisementStore } from "@/lib/advertisement/advertisement-store";
 import { NewsAdvertisementDisplay } from "@/components/advertisements/NewsAdvertisementDisplay";
 import { NewsInsights } from "@/components/news/NewsInsights";
+import { isArticleReported, getReportForArticle } from "@/lib/reports/reports-utils";
+import { NewsItem } from "@/lib/news/news-store";
+import { useToast } from "@/hooks/use-toast";
 
 const mockComments = [
   {
@@ -30,11 +34,18 @@ const NewsView = () => {
   const [newsItem, setNewsItem] = useState<NewsItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [likes, setLikes] = useState(42);
+  const { toast } = useToast();
+  const [reportInfo, setReportInfo] = useState<any>(null);
 
   useEffect(() => {
     if (id) {
       const item = newsItems.find(item => item.id === id);
       setNewsItem(item || null);
+      
+      // If article is reported, get report information
+      if (item && isArticleReported(id)) {
+        setReportInfo(getReportForArticle(id));
+      }
     }
     setLoading(false);
   }, [id, newsItems]);
@@ -82,6 +93,19 @@ const NewsView = () => {
       </div>
       
       <article className="bg-white rounded-lg shadow-md overflow-hidden">
+        {reportInfo && (
+          <div className="bg-red-50 p-4 border-b border-red-200 flex items-center">
+            <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
+            <div>
+              <h3 className="font-semibold text-red-700">Article Reported</h3>
+              <p className="text-sm text-red-600">
+                Reason: {reportInfo.reason} | Reported by: {reportInfo.reporter} | 
+                Date: {format(new Date(reportInfo.reportedAt), "PPP")}
+              </p>
+            </div>
+          </div>
+        )}
+        
         {newsItem.image && (
           <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
             <img 
@@ -97,6 +121,12 @@ const NewsView = () => {
             <Badge className="bg-blue-100 text-blue-800 border-blue-200">
               {newsItem.category}
             </Badge>
+            {isArticleReported(newsItem.id) && (
+              <Badge variant="destructive">
+                <AlertTriangle className="h-3 w-3 mr-1" />
+                Reported
+              </Badge>
+            )}
             <span className="text-sm text-gray-500 flex items-center">
               <Calendar className="mr-1 h-3 w-3" />
               {format(new Date(newsItem.createdAt), "MMM d, yyyy")}

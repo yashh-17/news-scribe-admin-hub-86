@@ -10,12 +10,15 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Image, Video, File, FileAudio, Eye } from "lucide-react";
+import { Edit, Trash2, Image, Video, File, FileAudio, Eye, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { 
   useNewsStore
 } from "@/lib/news/news-store";
 import { Pagination } from "./Pagination";
+
+// Mock reported IDs - In a real app, this would come from your reports database
+const reportedArticleIds = ["NEWS-1MF93K", "NEWS-2AB7CD"];
 
 interface NewsTableProps {
   onEdit: (news: NewsItem) => void;
@@ -72,6 +75,11 @@ export const NewsTable = ({
     );
   };
 
+  // Check if an article has been reported
+  const isReported = (newsId: string) => {
+    return reportedArticleIds.includes(newsId);
+  };
+
   return (
     <div>
       <Table>
@@ -98,7 +106,15 @@ export const NewsTable = ({
               <TableRow key={news.id}>
                 <TableCell className="font-mono text-xs">{news.id.substring(0, 8)}</TableCell>
                 <TableCell>
-                  <div className="font-medium">{news.title}</div>
+                  <div className="font-medium flex items-center gap-2">
+                    {news.title}
+                    {isReported(news.id) && (
+                      <Badge variant="destructive" className="ml-2">
+                        <AlertTriangle className="h-3 w-3 mr-1" />
+                        Reported
+                      </Badge>
+                    )}
+                  </div>
                   <div className="text-sm text-gray-500 md:hidden mt-1">
                     {news.category}
                   </div>

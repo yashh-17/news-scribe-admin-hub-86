@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, Trash2, Search } from "lucide-react";
+import { Eye, Trash2, Search, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 import {
   AlertDialog,
@@ -25,21 +26,22 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { NewsReport } from "@/types";
+import { useNewsStore } from "@/lib/news/news-store";
 
-// Mock data for reports
+// Mock data for reports with matching newsItems IDs
 const mockReports: NewsReport[] = [
   {
     id: "REP-001",
-    articleId: "NEWS-1",
-    articleTitle: "Breaking News: Important Event",
+    articleId: "NEWS-1MF93K", // Changed to match actual news ID
+    articleTitle: "New Technology Breakthrough in AI",
     reporter: "John Doe",
     reason: "Inappropriate content",
     reportedAt: new Date().toISOString(),
   },
   {
     id: "REP-002",
-    articleId: "NEWS-2",
-    articleTitle: "Technology Update",
+    articleId: "NEWS-2AB7CD", // Changed to match actual news ID
+    articleTitle: "Global Summit on Climate Change Begins",
     reporter: "Jane Smith",
     reason: "Misinformation",
     reportedAt: new Date(Date.now() - 86400000).toISOString(),
@@ -51,6 +53,7 @@ export function ReportsDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const newsItems = useNewsStore(state => state.newsItems);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -72,7 +75,18 @@ export function ReportsDashboard() {
   };
 
   const handleView = (articleId: string) => {
-    navigate(`/news/${articleId}`);
+    // Check if the article exists in the news database before navigating
+    const articleExists = newsItems.some(item => item.id === articleId);
+    
+    if (articleExists) {
+      navigate(`/news/${articleId}`);
+    } else {
+      toast({
+        title: "Article not found",
+        description: "This reported article no longer exists in the database.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
