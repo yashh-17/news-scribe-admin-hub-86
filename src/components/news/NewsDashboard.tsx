@@ -1,0 +1,83 @@
+
+import { useState } from "react";
+import { NewsHeader } from "./NewsHeader";
+import { NewsTable } from "./NewsTable";
+import { NewsCreateEditModal } from "./NewsCreateEditModal";
+import { useToast } from "@/hooks/use-toast";
+import { NewsDeleteConfirmation } from "./NewsDeleteConfirmation";
+import { NewsFilters } from "./NewsFilters";
+import { useNewsStore } from "@/lib/news/news-store";
+
+export const NewsDashboard = () => {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
+  const [deletingNewsId, setDeletingNewsId] = useState<string | null>(null);
+  const { toast } = useToast();
+  
+  const { newsItems, totalPages, searchTerm, setSearchTerm, selectedCategory, setSelectedCategory } = useNewsStore();
+
+  const handleCreateNews = () => {
+    setEditingNews(null);
+    setIsCreateModalOpen(true);
+  };
+
+  const handleEditNews = (news: NewsItem) => {
+    setEditingNews(news);
+    setIsCreateModalOpen(true);
+  };
+
+  const handleDeleteNews = (newsId: string) => {
+    setDeletingNewsId(newsId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (deletingNewsId) {
+      useNewsStore.getState().deleteNews(deletingNewsId);
+      toast({
+        title: "News Deleted",
+        description: "The news item has been successfully deleted.",
+      });
+      setIsDeleteModalOpen(false);
+      setDeletingNewsId(null);
+    }
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <NewsHeader onCreateNews={handleCreateNews} />
+      
+      <div className="mt-6">
+        <NewsFilters 
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
+      </div>
+      
+      <div className="mt-6 bg-white rounded-lg shadow">
+        <NewsTable 
+          onEdit={handleEditNews}
+          onDelete={handleDeleteNews}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+      
+      <NewsCreateEditModal 
+        isOpen={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)}
+        editingNews={editingNews}
+      />
+      
+      <NewsDeleteConfirmation
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+      />
+    </div>
+  );
+};
