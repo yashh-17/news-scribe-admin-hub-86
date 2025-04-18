@@ -8,6 +8,7 @@ interface AdvertisementState {
   updateAdvertisement: (id: string, ad: Partial<Omit<Advertisement, "id" | "createdAt">>) => void;
   deleteAdvertisement: (id: string) => void;
   toggleAdvertisementStatus: (id: string) => void;
+  getAdvertisementsForPost: (postId: string) => Advertisement[];
 }
 
 // Load initial data from localStorage if available
@@ -25,7 +26,7 @@ const saveAdsToStorage = (ads: Advertisement[]) => {
   }
 };
 
-export const useAdvertisementStore = create<AdvertisementState>((set) => ({
+export const useAdvertisementStore = create<AdvertisementState>((set, get) => ({
   advertisements: getInitialAds(),
   
   addAdvertisement: (ad) => set((state) => {
@@ -72,4 +73,11 @@ export const useAdvertisementStore = create<AdvertisementState>((set) => ({
     
     return { advertisements: updatedAds };
   }),
+
+  getAdvertisementsForPost: (postId) => {
+    const state = get();
+    return state.advertisements.filter(ad => 
+      ad.isActive && ad.postIds.includes(postId)
+    );
+  }
 }));

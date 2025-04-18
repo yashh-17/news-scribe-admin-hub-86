@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
 import { useNewsStore } from "@/lib/news/news-store";
 import { format } from "date-fns";
+import { useAdvertisementStore } from "@/lib/advertisement/advertisement-store";
+import { NewsAdvertisementDisplay } from "@/components/advertisements/NewsAdvertisementDisplay";
 
 const NewsView = () => {
   const { id } = useParams<{ id: string }>();
@@ -58,6 +60,11 @@ const NewsView = () => {
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to News Dashboard
       </Link>
+      
+      {/* Display relevant advertisements for this news article */}
+      <div className="mb-6">
+        <NewsAdvertisementDisplay newsId={newsItem.id} />
+      </div>
       
       <article className="bg-white rounded-lg shadow-md overflow-hidden">
         {newsItem.image && (
