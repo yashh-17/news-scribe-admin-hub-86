@@ -45,7 +45,18 @@ const menuItems = [
 
 export function AppSidebar() {
   const location = useLocation();
-  const { open, setOpen } = useSidebar();
+  // Get the context values safely with try/catch
+  let open = false;
+  let setOpen = () => {};
+  
+  try {
+    const sidebarContext = useSidebar();
+    open = sidebarContext.open;
+    setOpen = sidebarContext.setOpen;
+  } catch (error) {
+    console.error("Sidebar context not available:", error);
+    // Provide fallback behavior
+  }
 
   // Function to handle mouse enter/leave events
   const handleMouseEnter = () => setOpen(true);
