@@ -73,13 +73,13 @@ export const AppSidebar = () => {
   return (
     <Sidebar 
       collapsible="icon"
-      className="border-r border-gray-200"
+      className="border-r border-gray-200 transition-all duration-300"
       onMouseEnter={() => {}}
       onMouseLeave={() => {}}
     >
-      <SidebarHeader className="h-14 flex items-center px-3 border-b border-gray-200">
+      <SidebarHeader className="h-14 flex items-center px-3 border-b border-gray-100/10">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600/10 text-blue-600">
             <Newspaper className="h-4 w-4" />
           </div>
           <span className="font-semibold text-gray-900">News Admin</span>
@@ -99,6 +99,7 @@ export const AppSidebar = () => {
                 asChild
                 tooltip={item.title}
                 isActive={isActive(item.path, item.exact)}
+                className="transition-colors duration-200 hover:bg-gray-100/10"
               >
                 <Link to={item.path}>
                   <item.icon className="h-4 w-4" />
