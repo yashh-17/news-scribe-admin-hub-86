@@ -1,124 +1,131 @@
 
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, 
-  NewspaperIcon, 
-  StickyNote, 
-  Users,
-  ChevronLeft,
-  BarChart,
-  AlertTriangle
-} from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+  Newspaper, 
+  BarChart, 
+  Users, 
+  FileText, 
+  Flag,
+  Bell
+} from 'lucide-react';
+import { useSidebar } from '@/components/ui/sidebar';
 import {
   Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+  SidebarFooter,
+  SidebarSection,
+  SidebarHeader,
+  SidebarItem,
+  SidebarItemIcon,
+  SidebarItemText,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { useSidebar } from "@/components/ui/sidebar/sidebar-context";
+  SidebarContent,
+} from '@/components/ui/sidebar';
+import { useNotificationStore } from '@/lib/notification/notification-store';
+import { Badge } from '@/components/ui/badge';
 
-const menuItems = [
-  {
-    title: "Dashboard",
-    url: "/",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "News",
-    url: "/",
-    icon: NewspaperIcon,
-  },
-  {
-    title: "Analytics",
-    url: "/analytics",
-    icon: BarChart,
-  },
-  {
-    title: "Advertisements",
-    url: "/advertisements",
-    icon: StickyNote,
-  },
-  {
-    title: "Users",
-    url: "/users",
-    icon: Users,
-  },
-  {
-    title: "Reports",
-    url: "/reports",
-    icon: AlertTriangle,
-  },
-];
-
-export function AppSidebar() {
+export const AppSidebar = () => {
+  const { isOpen } = useSidebar();
   const location = useLocation();
+  const unreadCount = useNotificationStore(state => state.unreadCount);
   
-  // Use a try-catch to safely access the sidebar context
-  let open = false;
-  let setOpen = (value: boolean) => {};
-  
-  try {
-    const { open: contextOpen, setOpen: contextSetOpen } = useSidebar();
-    open = contextOpen;
-    setOpen = contextSetOpen;
-  } catch (error) {
-    console.error("Sidebar context not available:", error);
-    // Fallback behavior is handled by the default values above
-  }
+  const isActive = (path: string) => {
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
+  };
 
-  const handleMouseEnter = () => setOpen(true);
-  const handleMouseLeave = () => setOpen(false);
+  const linkClass = (path: string) => {
+    return `flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+      isActive(path) ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-100 text-gray-700'
+    }`;
+  };
+
+  const iconClass = 'w-5 h-5';
 
   return (
-    <Sidebar 
-      className="border-r border-gray-200 transition-all duration-300 ease-in-out" 
-      collapsible="icon"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <SidebarContent>
-        <div className="flex items-center justify-between px-4 py-4">
-          <h2 className={`text-xl font-semibold text-gray-800 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}>
-            Admin Panel
-          </h2>
-          <SidebarTrigger>
-            <ChevronLeft className={`h-5 w-5 transition-transform duration-300 ${!open ? 'rotate-180' : ''}`} />
-          </SidebarTrigger>
+    <Sidebar>
+      <SidebarHeader className="border-b py-4">
+        <div className="flex items-center px-3">
+          <div className="w-8 h-8 rounded bg-blue-600 text-white flex items-center justify-center mr-2">
+            <Newspaper className="w-4 h-4" />
+          </div>
+          {isOpen && (
+            <div className="font-semibold text-lg">News Admin</div>
+          )}
         </div>
-        <SidebarGroup>
-          <SidebarGroupLabel className={`transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}>
-            Menu
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    asChild 
-                    isActive={location.pathname === item.url}
-                    tooltip={item.title}
-                  >
-                    <Link 
-                      to={item.url} 
-                      className="w-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
-                    >
-                      <item.icon className="shrink-0" />
-                      <span className={`transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}>
-                        {item.title}
-                      </span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarSection>
+          <SidebarItem>
+            <Link to="/" className={linkClass('/')}>
+              <SidebarItemIcon>
+                <Newspaper className={iconClass} />
+              </SidebarItemIcon>
+              <SidebarItemText>News</SidebarItemText>
+            </Link>
+          </SidebarItem>
+          <SidebarItem>
+            <Link to="/analytics" className={linkClass('/analytics')}>
+              <SidebarItemIcon>
+                <BarChart className={iconClass} />
+              </SidebarItemIcon>
+              <SidebarItemText>Analytics</SidebarItemText>
+            </Link>
+          </SidebarItem>
+          <SidebarItem>
+            <Link to="/advertisements" className={linkClass('/advertisements')}>
+              <SidebarItemIcon>
+                <FileText className={iconClass} />
+              </SidebarItemIcon>
+              <SidebarItemText>Advertisements</SidebarItemText>
+            </Link>
+          </SidebarItem>
+          <SidebarItem>
+            <Link to="/users" className={linkClass('/users')}>
+              <SidebarItemIcon>
+                <Users className={iconClass} />
+              </SidebarItemIcon>
+              <SidebarItemText>Users</SidebarItemText>
+            </Link>
+          </SidebarItem>
+          <SidebarItem>
+            <Link to="/reports" className={linkClass('/reports')}>
+              <SidebarItemIcon>
+                <Flag className={iconClass} />
+              </SidebarItemIcon>
+              <SidebarItemText>Reports</SidebarItemText>
+            </Link>
+          </SidebarItem>
+          <SidebarItem>
+            <Link to="/notifications" className={linkClass('/notifications')}>
+              <SidebarItemIcon>
+                <Bell className={iconClass} />
+              </SidebarItemIcon>
+              <SidebarItemText>
+                <div className="flex items-center gap-2">
+                  Notifications
+                  {unreadCount > 0 && (
+                    <Badge variant="destructive" className="h-5 min-w-5 flex items-center justify-center p-0 text-xs">
+                      {unreadCount}
+                    </Badge>
+                  )}
+                </div>
+              </SidebarItemText>
+            </Link>
+          </SidebarItem>
+        </SidebarSection>
       </SidebarContent>
+      <SidebarFooter className="border-t p-3">
+        <SidebarTrigger />
+      </SidebarFooter>
     </Sidebar>
   );
-}
+};
+
+console.log('Sidebar context not available:', {
+  _type: 'Error',
+  value: {
+    name: 'Error',
+    message: 'useSidebar must be used within a SidebarProvider',
+    stack: 'Error: useSidebar must be used within a SidebarProvider\n    at useSidebar (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/src/components/ui/sidebar/sidebar-context.tsx:21:15)\n    at AppSidebar (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/src/components/layout/AppSidebar.tsx:54:64)\n    at renderWithHooks (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:11548:26)\n    at mountIndeterminateComponent (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:14926:21)\n    at beginWork (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:15914:22)\n    at beginWork$1 (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:19753:22)\n    at performUnitOfWork (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:19198:20)\n    at workLoopSync (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:19137:13)\n    at renderRootSync (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:19116:15)\n    at performSyncWorkOnRoot (https://9a308c48-a7c5-48f5-8833-31986cbb2b4b.lovableproject.com/node_modules/.vite/deps/chunk-T2SWDQEL.js?v=1e8b365a:18874:28)'
+  }
+});

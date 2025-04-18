@@ -1,5 +1,6 @@
 
 import { NewsReport } from "@/types";
+import { createReportNotification, useNotificationStore } from "@/lib/notification/notification-store";
 
 // This would typically come from a database or API
 const reportedArticles: NewsReport[] = [
@@ -47,4 +48,38 @@ export const getReportForArticle = (articleId: string): NewsReport | undefined =
  */
 export const getAllReports = (): NewsReport[] => {
   return [...reportedArticles];
+};
+
+/**
+ * Creates a new report
+ */
+export const createReport = (report: Omit<NewsReport, "id" | "reportedAt">): NewsReport => {
+  const newReport = {
+    ...report,
+    id: `REP-${reportedArticles.length + 1}`.padStart(7, '0'),
+    reportedAt: new Date().toISOString()
+  };
+  
+  reportedArticles.push(newReport);
+  
+  // Notify admin about the new report
+  const { addNotification } = useNotificationStore.getState();
+  addNotification(createReportNotification(report.articleTitle, report.articleId));
+  
+  return newReport;
+};
+
+/**
+ * Delete a report
+ */
+export const deleteReport = (reportId: string): boolean => {
+  const initialLength = reportedArticles.length;
+  const index = reportedArticles.findIndex(report => report.id === reportId);
+  
+  if (index !== -1) {
+    reportedArticles.splice(index, 1);
+    return reportedArticles.length < initialLength;
+  }
+  
+  return false;
 };

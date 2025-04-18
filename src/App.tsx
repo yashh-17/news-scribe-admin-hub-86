@@ -15,6 +15,7 @@ import NewsAnalyticsPage from "./pages/NewsAnalyticsPage";
 import AdvertisementPage from "./pages/AdvertisementPage";
 import UserPage from "./pages/UserPage";
 import ReportsPage from "./pages/ReportsPage";
+import NotificationsPage from "./pages/NotificationsPage";
 import { AppLayout } from "./components/layout/AppLayout";
 
 const queryClient = new QueryClient();
@@ -84,6 +85,16 @@ const App = () => (
                 <ProtectedRoute>
                   <AppLayout>
                     <ReportsPage />
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <NotificationsPage />
                   </AppLayout>
                 </ProtectedRoute>
               }
