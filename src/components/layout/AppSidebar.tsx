@@ -45,20 +45,20 @@ const menuItems = [
 
 export function AppSidebar() {
   const location = useLocation();
-  // Get the context values safely with try/catch
+  
+  // Use a try-catch to safely access the sidebar context
   let open = false;
-  let setOpen = (value: boolean) => {}; // Fixed: Properly define the function signature with a boolean parameter
+  let setOpen = (value: boolean) => {};
   
   try {
-    const sidebarContext = useSidebar();
-    open = sidebarContext.open;
-    setOpen = sidebarContext.setOpen;
+    const { open: contextOpen, setOpen: contextSetOpen } = useSidebar();
+    open = contextOpen;
+    setOpen = contextSetOpen;
   } catch (error) {
     console.error("Sidebar context not available:", error);
-    // Provide fallback behavior
+    // Fallback behavior is handled by the default values above
   }
 
-  // Function to handle mouse enter/leave events
   const handleMouseEnter = () => setOpen(true);
   const handleMouseLeave = () => setOpen(false);
 
