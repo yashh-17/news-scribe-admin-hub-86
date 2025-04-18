@@ -25,6 +25,11 @@ export const NewsFilters = ({
   selectedCategory,
   onCategoryChange,
 }: NewsFiltersProps) => {
+  const handleCategoryChange = (value: string) => {
+    console.log("Category changed to:", value);
+    onCategoryChange(value);
+  };
+
   return (
     <div className="flex flex-col md:flex-row gap-4">
       <div className="relative flex-1">
@@ -41,7 +46,7 @@ export const NewsFilters = ({
       <div className="w-full md:w-64">
         <Select
           value={selectedCategory}
-          onValueChange={onCategoryChange}
+          onValueChange={handleCategoryChange}
         >
           <SelectTrigger>
             <SelectValue placeholder="Filter by category" />

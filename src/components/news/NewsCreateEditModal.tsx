@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -118,48 +119,60 @@ export const NewsCreateEditModal = ({
   };
 
   const onSubmit = (values: FormValues) => {
-    if (editingNews) {
-      // Fix: Ensure all required properties are included when updating news
-      const updatedNews: NewsItem = {
-        id: editingNews.id,
-        title: values.title,
-        content: values.content,
-        category: values.category,
-        image: values.image,
-        audio: values.audio,
-        video: values.video,
-        keywords: values.keywords,
-        createdAt: editingNews.createdAt,
-        updatedAt: new Date().toISOString(),
-      };
+    console.log("Form submitted with values:", values);
+    
+    try {
+      if (editingNews) {
+        // Update existing news
+        updateNews({
+          ...editingNews,
+          title: values.title,
+          content: values.content,
+          category: values.category,
+          image: values.image,
+          audio: values.audio,
+          video: values.video,
+          keywords: values.keywords,
+          updatedAt: new Date().toISOString(),
+        });
+        
+        toast({
+          title: "News Updated",
+          description: "The news item has been successfully updated.",
+        });
+      } else {
+        // Create new news
+        const newNewsItem: NewsItem = {
+          id: `NEWS-${Date.now().toString(36).toUpperCase()}`,
+          title: values.title,
+          content: values.content,
+          category: values.category,
+          image: values.image,
+          audio: values.audio,
+          video: values.video,
+          keywords: values.keywords,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        
+        addNews(newNewsItem);
+        
+        toast({
+          title: "News Created",
+          description: "The news item has been successfully created.",
+        });
+      }
       
-      updateNews(updatedNews);
+      // Close the modal after successful submission
+      onClose();
+    } catch (error) {
+      console.error("Error saving news:", error);
       toast({
-        title: "News Updated",
-        description: "The news item has been successfully updated.",
-      });
-    } else {
-      // Fix: Ensure all required properties are included when adding news
-      const newNewsItem: NewsItem = {
-        id: `NEWS-${Date.now().toString(36).toUpperCase()}`,
-        title: values.title,
-        content: values.content,
-        category: values.category,
-        image: values.image,
-        audio: values.audio,
-        video: values.video,
-        keywords: values.keywords,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      
-      addNews(newNewsItem);
-      toast({
-        title: "News Created",
-        description: "The news item has been successfully created.",
+        title: "Error",
+        description: "There was an error saving the news item.",
+        variant: "destructive",
       });
     }
-    onClose();
   };
 
   return (

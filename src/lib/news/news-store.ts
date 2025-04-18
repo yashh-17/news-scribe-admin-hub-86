@@ -88,29 +88,44 @@ const mockNewsItems: NewsItem[] = [
 export const useNewsStore = create<NewsStoreState>((set, get) => ({
   newsItems: mockNewsItems,
   searchTerm: "",
-  selectedCategory: "",
+  selectedCategory: "all",
   itemsPerPage: 10,
   
-  addNews: (news) => set((state) => ({
-    newsItems: [news, ...state.newsItems],
-  })),
+  addNews: (news) => {
+    console.log("Adding news:", news);
+    set((state) => ({
+      newsItems: [news, ...state.newsItems],
+    }));
+  },
   
-  updateNews: (updatedNews) => set((state) => ({
-    newsItems: state.newsItems.map((news) => 
-      news.id === updatedNews.id ? updatedNews : news
-    ),
-  })),
+  updateNews: (updatedNews) => {
+    console.log("Updating news:", updatedNews);
+    set((state) => ({
+      newsItems: state.newsItems.map((news) => 
+        news.id === updatedNews.id ? updatedNews : news
+      ),
+    }));
+  },
   
-  deleteNews: (id) => set((state) => ({
-    newsItems: state.newsItems.filter((news) => news.id !== id),
-  })),
+  deleteNews: (id) => {
+    console.log("Deleting news with ID:", id);
+    set((state) => ({
+      newsItems: state.newsItems.filter((news) => news.id !== id),
+    }));
+  },
   
   setSearchTerm: (term) => set({ searchTerm: term }),
   
-  setSelectedCategory: (category) => set({ selectedCategory: category }),
+  setSelectedCategory: (category) => {
+    console.log("Setting category filter to:", category);
+    set({ selectedCategory: category });
+  },
   
   get filteredNewsItems() {
     const state = get();
+    console.log("Filtering with category:", state.selectedCategory);
+    console.log("Filtering with search term:", state.searchTerm);
+    
     return state.newsItems.filter((news) => {
       // Filter by search term
       const matchesSearch = state.searchTerm === "" || 
@@ -120,7 +135,7 @@ export const useNewsStore = create<NewsStoreState>((set, get) => ({
         );
       
       // Filter by category
-      const matchesCategory = state.selectedCategory === "" || 
+      const matchesCategory = state.selectedCategory === "all" || 
         news.category === state.selectedCategory;
       
       return matchesSearch && matchesCategory;
