@@ -25,6 +25,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem('admin_token');
   };
 
+  // Verify token on mount
+  useEffect(() => {
+    const storedToken = localStorage.getItem('admin_token');
+    if (storedToken) {
+      // In a real app, you'd validate the token here
+      setToken(storedToken);
+    }
+  }, []);
+
   return (
     <AuthContext.Provider 
       value={{ 

@@ -18,15 +18,14 @@ interface NewsStoreState {
   newsItems: NewsItem[];
   searchTerm: string;
   selectedCategory: string;
+  currentPage: number;
   itemsPerPage: number;
   addNews: (news: NewsItem) => void;
   updateNews: (updatedNews: NewsItem) => void;
   deleteNews: (id: string) => void;
   setSearchTerm: (term: string) => void;
   setSelectedCategory: (category: string) => void;
-  filteredNewsItems: NewsItem[];
-  paginatedNewsItems: NewsItem[];
-  totalPages: number;
+  setCurrentPage: (page: number) => void;
 }
 
 // Sample mock data for initial state
@@ -85,70 +84,103 @@ const mockNewsItems: NewsItem[] = [
   },
 ];
 
+// Load news from localStorage if available
+const loadNewsFromStorage = (): NewsItem[] => {
+  try {
+    const savedNews = localStorage.getItem('news_items');
+    return savedNews ? JSON.parse(savedNews) : mockNewsItems;
+  } catch (error) {
+    console.error("Error loading news from storage:", error);
+    return mockNewsItems;
+  }
+};
+
+// Save news to localStorage
+const saveNewsToStorage = (newsItems: NewsItem[]) => {
+  try {
+    localStorage.setItem('news_items', JSON.stringify(newsItems));
+  } catch (error) {
+    console.error("Error saving news to storage:", error);
+  }
+};
+
 export const useNewsStore = create<NewsStoreState>((set, get) => ({
-  newsItems: mockNewsItems,
+  newsItems: loadNewsFromStorage(),
   searchTerm: "",
   selectedCategory: "all",
+  currentPage: 1,
   itemsPerPage: 10,
   
   addNews: (news) => {
     console.log("Adding news:", news);
-    set((state) => ({
-      newsItems: [news, ...state.newsItems],
-    }));
+    set((state) => {
+      const updatedItems = [news, ...state.newsItems];
+      saveNewsToStorage(updatedItems);
+      return { newsItems: updatedItems };
+    });
   },
   
   updateNews: (updatedNews) => {
     console.log("Updating news:", updatedNews);
-    set((state) => ({
-      newsItems: state.newsItems.map((news) => 
+    set((state) => {
+      const updatedItems = state.newsItems.map((news) => 
         news.id === updatedNews.id ? updatedNews : news
-      ),
-    }));
+      );
+      saveNewsToStorage(updatedItems);
+      return { newsItems: updatedItems };
+    });
   },
   
   deleteNews: (id) => {
     console.log("Deleting news with ID:", id);
-    set((state) => ({
-      newsItems: state.newsItems.filter((news) => news.id !== id),
-    }));
+    set((state) => {
+      const updatedItems = state.newsItems.filter((news) => news.id !== id);
+      saveNewsToStorage(updatedItems);
+      return { newsItems: updatedItems };
+    });
   },
   
   setSearchTerm: (term) => set({ searchTerm: term }),
   
   setSelectedCategory: (category) => {
     console.log("Setting category filter to:", category);
-    set({ selectedCategory: category });
+    set({ selectedCategory: category, currentPage: 1 }); // Reset to first page when changing category
   },
   
-  get filteredNewsItems() {
-    const state = get();
-    console.log("Filtering with category:", state.selectedCategory);
-    console.log("Filtering with search term:", state.searchTerm);
-    
-    return state.newsItems.filter((news) => {
-      // Filter by search term
-      const matchesSearch = state.searchTerm === "" || 
-        news.title.toLowerCase().includes(state.searchTerm.toLowerCase()) ||
-        news.keywords.some(keyword => 
-          keyword.toLowerCase().includes(state.searchTerm.toLowerCase())
-        );
-      
-      // Filter by category
-      const matchesCategory = state.selectedCategory === "all" || 
-        news.category === state.selectedCategory;
-      
-      return matchesSearch && matchesCategory;
-    });
-  },
-  
-  get paginatedNewsItems() {
-    const filteredItems = get().filteredNewsItems;
-    return filteredItems;
-  },
-  
-  get totalPages() {
-    const filteredItems = get().filteredNewsItems;
-    return Math.ceil(filteredItems.length / get().itemsPerPage);
-  },
+  setCurrentPage: (page) => set({ currentPage: page }),
 }));
+
+// Add selector functions outside the store
+export const selectFilteredNewsItems = (state: NewsStoreState) => {
+  const { newsItems, searchTerm, selectedCategory } = state;
+  
+  return newsItems.filter((news) => {
+    // Filter by search term
+    const matchesSearch = searchTerm === "" || 
+      news.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      news.keywords.some(keyword => 
+        keyword.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    
+    // Filter by category
+    const matchesCategory = selectedCategory === "all" || 
+      news.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
+};
+
+export const selectPaginatedNewsItems = (state: NewsStoreState) => {
+  const filteredItems = selectFilteredNewsItems(state);
+  const { currentPage, itemsPerPage } = state;
+  
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  
+  return filteredItems.slice(startIndex, endIndex);
+};
+
+export const selectTotalPages = (state: NewsStoreState) => {
+  const filteredItems = selectFilteredNewsItems(state);
+  return Math.ceil(filteredItems.length / state.itemsPerPage);
+};

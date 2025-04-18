@@ -12,23 +12,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, Image, Video, File, FileAudio, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useNewsStore } from "@/lib/news/news-store";
+import { 
+  useNewsStore, 
+  selectPaginatedNewsItems, 
+  selectTotalPages 
+} from "@/lib/news/news-store";
 import { Pagination } from "./Pagination";
 
 interface NewsTableProps {
   onEdit: (news: NewsItem) => void;
   onDelete: (id: string) => void;
-  currentPage: number;
-  onPageChange: (page: number) => void;
 }
 
 export const NewsTable = ({ 
   onEdit, 
-  onDelete, 
-  currentPage,
-  onPageChange
+  onDelete
 }: NewsTableProps) => {
-  const { paginatedNewsItems, totalPages } = useNewsStore();
+  const { newsItems, currentPage, setCurrentPage } = useNewsStore(state => ({
+    newsItems: state.newsItems,
+    currentPage: state.currentPage,
+    setCurrentPage: state.setCurrentPage
+  }));
+  
+  const paginatedNewsItems = useNewsStore(selectPaginatedNewsItems);
+  const totalPages = useNewsStore(selectTotalPages);
   
   const getMediaIcon = (news: NewsItem) => {
     const icons = [];
@@ -138,7 +145,7 @@ export const NewsTable = ({
           <Pagination 
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={onPageChange}
+            onPageChange={setCurrentPage}
           />
         </div>
       )}

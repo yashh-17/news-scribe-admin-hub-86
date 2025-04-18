@@ -11,12 +11,11 @@ import { useNewsStore } from "@/lib/news/news-store";
 export const NewsDashboard = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
   const [deletingNewsId, setDeletingNewsId] = useState<string | null>(null);
   const { toast } = useToast();
   
-  const { newsItems, totalPages, searchTerm, setSearchTerm, selectedCategory, setSelectedCategory } = useNewsStore();
+  const { searchTerm, setSearchTerm, selectedCategory, setSelectedCategory } = useNewsStore();
 
   const handleCreateNews = () => {
     setEditingNews(null);
@@ -62,8 +61,6 @@ export const NewsDashboard = () => {
         <NewsTable 
           onEdit={handleEditNews}
           onDelete={handleDeleteNews}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
         />
       </div>
       
